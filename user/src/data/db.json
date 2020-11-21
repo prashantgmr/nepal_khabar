@@ -1,0 +1,94 @@
+{
+  "newsDetail": [
+    {
+      "news": [
+        {
+          "title": "bhojpur ",
+          "content": "this is bhojpur\n"
+        }
+      ],
+      "district": "भोजपुर",
+      "id": 1
+    },
+    {
+      "news": [
+        {
+          "title": "dhankuta",
+          "content": "dhankuta is pretty"
+        }
+      ],
+      "district": "धनकुटा",
+      "id": 2
+    },
+    {
+      "news": [
+        {
+          "title": "ilam",
+          "content": "ilam is the prettiest"
+        }
+      ],
+      "district": "इलाम",
+      "id": 3
+    },
+    {
+      "news": [
+        {
+          "title": "bhojpur again",
+          "content": "i dont know man"
+        }
+      ],
+      "district": "भोजपुर",
+      "id": 4
+    },
+    {
+      "news": [
+        {
+          "title": "Web Design, Frontend Development",
+          "content": "ojljihhkhukuhiuh"
+        }
+      ],
+      "district": "काठमाण्डौं",
+      "id": 5
+    },
+    {
+      "news": [
+        {
+          "title": "Web Design, Frontend Development",
+          "content": "ojljihhkhukuhiuh"
+        }
+      ],
+      "district": "काठमाण्डौं",
+      "id": 6
+    },
+    {
+      "news": [
+        {
+          "title": "Web Design, Frontend Development",
+          "content": "ojljihhkhukuhiuh"
+        }
+      ],
+      "district": "काठमाण्डौं",
+      "id": 7
+    },
+    {
+      "news": [
+        {
+          "title": "Web Design, Frontend Development",
+          "content": "ojljihhkhukuhiuh"
+        }
+      ],
+      "district": "काठमाण्डौं",
+      "id": 8
+    },
+    {
+      "news": [
+        {
+          "title": "Web Design, Frontend Development",
+          "content": "ojljihhkhukuhiuh"
+        }
+      ],
+      "district": "काठमाण्डौं",
+      "id": 9
+    }
+  ]
+}

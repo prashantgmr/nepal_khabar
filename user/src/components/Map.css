@@ -1,0 +1,31 @@
+body {
+    background-color: #f7f7f7;
+  }
+  .leaflet-container {
+    background-color: #f7f7f7;
+  }
+
+  .news_section {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 1em;
+  }
+  .newsbrief {
+    background-color:red;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap:1em;
+  }
+  .newsbrief img {
+    height: 100px;
+    object-fit: contain;
+  }
+  .form-group {
+    margin-bottom:1rem
+  }
+  .leaflet-tooltip.leaflet-label {
+    background-color: transparent;
+    border: transparent;
+    box-shadow: none;
+    font-size: 8px;
+    }
