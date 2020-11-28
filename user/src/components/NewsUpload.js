@@ -9,7 +9,7 @@ const initialstate = {
 }
  const  reducer = (state = initialstate, action) => {
     switch(action.type) {
-      case 'ADD_NEWS':
+      case 'ADD_TENDER':
         return {
           ...state,
           news: [...state.news, action.payload]

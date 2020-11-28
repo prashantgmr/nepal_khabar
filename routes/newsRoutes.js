@@ -21,7 +21,9 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     cb(null, false);
+      return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
   }
+  
 };
 const upload = multer({
   storage: Storage,

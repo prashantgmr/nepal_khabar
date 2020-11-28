@@ -43,20 +43,32 @@ exports.addNews =  async (req, res, next) => {
       success: true,
       data: news
     }); 
-  } catch (err) {
+  } 
+  
+  catch (err) {
     if(err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(val => val.message);
+      const messages = Object.values(err.errors).reduce((obj,val) => ( {...obj, [val.path]:val.message}),{}) 
 
+      console.log(messages);
       return res.status(400).json({
         success: false,
         error: messages
       });
-    } else {
+    } 
+        else if (!req.file) {
+             return res.status(400).json({
+        success: false,
+        error: {image :'Please select an image to upload'}
+      });
+    }
+    else {
       return res.status(500).json({
         success: false,
         error: 'Server Error'
       });
     }
+
+    
   }
 }
 

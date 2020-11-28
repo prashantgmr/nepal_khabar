@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef} from 'react';
 import { Map, GeoJSON} from "react-leaflet";
 import mapData from "./../data/districts.json";
 import "leaflet/dist/leaflet.css";
+import "./Map.css";
 import axios from 'axios'
 import NewsBrief from './NewsBrief';
 

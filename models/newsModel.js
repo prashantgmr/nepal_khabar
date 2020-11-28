@@ -16,7 +16,7 @@ const NewsSchema = new mongoose.Schema({
   },
   imageFile: {
     type: String,
-    required: [true, 'Please upload a photo']
+    required: [true, 'Please upload an image']
   },
   createdAt: {
     type: Date,
