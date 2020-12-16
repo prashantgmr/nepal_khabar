@@ -31,7 +31,8 @@ import Box from '@material-ui/core/Box';
 import axios from 'axios'
 // core components
 import Header from "../../components/Headers/Header.js";
-import CountDown from '../../components/CountDown.js';
+import mapData from "../../data/districts.json";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,8 +69,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function NewsList() {
-    const [tender, setTender] = useState([]);
-    const [status, setStatus] = useState(null)
+    const [news, setNews] = useState([]);
+    const [status, setStatus] = useState(null);
+    const [delClicked, setDelClicked]= useState(false)
     const [value, setValue] = useState(0);
     const handleChange = (event, newValue) => {
       setValue(newValue);
@@ -78,13 +80,15 @@ export default function NewsList() {
     useEffect(() => {
       fetchMyAPI();
       return  ()=>{
-        setStatus(null)
+        setStatus(null);
+        setDelClicked(false)
       }
-  }, [status]);
+  }, [status, delClicked]);
+  
   async function fetchMyAPI() {
       let response = await axios.get(`http://localhost:5000/api/v1/news`)
       response = await response.data.data;
-      setTender(response);
+      setNews(response);
   };
     function handleStatus(id,status){
       // console.log(id,status);
@@ -93,8 +97,24 @@ export default function NewsList() {
     }
       async function fetchStatusAPI(id,status) {
         
-            await axios.post(`http://localhost:5000/api/v1/tender/change_status`, {id:id, status:status})
+            await axios.post(`http://localhost:5000/api/v1/news/change_status`, {id:id, status:status})
         };
+    
+      function handleDel(id){
+          deleteNews(id);
+          setDelClicked(true);
+      }
+      async function  deleteNews(id) {
+          try {
+            await axios.delete(`/api/v1/news/${id}`);
+      
+          } catch (err) {
+            // dispatch({
+            //   type: 'TRANSACTION_ERROR',
+            //   payload: err.response.data.error
+            // });
+          }
+        }
     return (
         <>
         <Header />
@@ -105,40 +125,44 @@ export default function NewsList() {
               <Card className="shadow">
                 <CardHeader className="border-0 pb-0">
                   <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    <Tab label={`All(${tender.length})`} {...a11yProps(0)} />
-                    <Tab label="Selected" {...a11yProps(1)} />
-                    <Tab label="Rejected" {...a11yProps(2)} />
+                    <Tab label={`All(${news.length})`} {...a11yProps(0)} />
+                    <Tab label="Approved" {...a11yProps(1)} />
+                    <Tab label="Archived" {...a11yProps(2)} />
                   </Tabs>
-                  {/* <h3 className="mb-0">Tender List</h3> */}
+                  {/* <h3 className="mb-0">news List</h3> */}
                 </CardHeader>
                 <TabPanel value={value} index={0}>
                   <MaterialTable className="px-0"
                   icons={tableIcons}
                   columns={[
+                    { title: "Featured Image",
+                    render :(rowData)=><img src={`../../${rowData.imageFile}`} width="100%" height="50" style={{objectFit:"contain"}}/>
+                    
+                  },
+
                     {
-                      title: "Project Title",
-                      field: "ProjectTitle",
+                      title: "Date",
+                      field: "createdAt",
+                      // render :(rowData)=> rowData.createdAt.toUTCString()
+
                     },
-                    { title: "IFB NO:", field: "IFBNo" },
-                    { title: "Procurement Method", field: "Procurement" },
-                    {
-                      title: "Project Address",
-                      field: "PublicAddress",
-                    },
-                    { title: "Public Entity", field: "Publicentity" },
-                    // { title: "Procurement Method", field: "Procurement" },
-                    {
-                      title: "Days Remaining",
-                      render: (rowData) => (
-                        <CountDown date={rowData.bidsubdate} dateAD={rowData.dateAD} />
-                      ),
-                    },
+                    // {
+                    //   title: "District",
+                    //   render : (rowData)=> {
+                    //     let dist = mapData.features.filter(x=>x.idx == rowData.district);
+                    //     console.log(dist, "dist")
+                    //     return (
+                    //     false //  dist.length && dist[0].properties.जिल्ला
+                    //     );
+                    //   }
+                    // },
+                    { title: "Title", field: "newsTitle" },
 
                     {
                       title: "Status",
                       render: (rowData) => {
                         let bgColor;
-                      if(rowData.status=='selected'){
+                      if(rowData.status=='approved'){
                         bgColor="green"
                       }
                       else if(rowData.status=='rejected')
@@ -149,7 +173,7 @@ export default function NewsList() {
                         rowData.status == "" ?
                          <FormGroup  check  >
                           <Label className="d-block">
-                              <Input type="radio" name={`${rowData._id}status`} value="selected"  onChange={(e)=>handleStatus(rowData._id, e.target.value)}/>
+                              <Input type="radio" name={`${rowData._id}status`} value="approved"  onChange={(e)=>handleStatus(rowData._id, e.target.value)}/>
                           Approve
                           </Label>
                           {/* </FormGroup>
@@ -178,29 +202,32 @@ export default function NewsList() {
                           </DropdownToggle>
                           <DropdownMenu className="dropdown-menu-arrow" right>
                             <DropdownItem
-                              href="#pablo"
                               onClick={e => e.preventDefault()}
                             >
                               Edit
                             </DropdownItem>
                             <DropdownItem
-                              href="#pablo"
-                              onClick={e => e.preventDefault()}
+                              onClick={()=>handleDel(rowData._id)}
                             >
                              Delete
+                            </DropdownItem>
+                            <DropdownItem
+                              onClick={e => e.preventDefault()}
+                            >
+                              Details
                             </DropdownItem>
                             <DropdownItem
                               href="#pablo"
                               onClick={e => e.preventDefault()}
                             >
-                              Details
+                              Archive
                             </DropdownItem>
                           </DropdownMenu>
                         </UncontrolledDropdown>
                       ),
                     },
                   ]}
-                  data={tender}
+                  data={news}
                   title=""
                 />
                 </TabPanel>

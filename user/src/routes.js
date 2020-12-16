@@ -22,7 +22,7 @@ import Register from "./views/examples/Register.js";
 import Login from "./views/examples/Login.js";
 import Tables from "./views/examples/Tables.js";
 import AddNews from "./views/examples/AddNews.js";
-// import NewsList from "./views/examples/NewsList.js";
+import NewsList from "./views/examples/NewsList.js";
 import CreateUser from "./views/examples/CreateUser.js";
 
 var routes = [
@@ -40,13 +40,13 @@ var routes = [
     component: AddNews,
     layout: "/admin"
   },
-  //    {
-  //   path: "/news_list",
-  //   name: "News List",
-  //   icon: "ni ni-planet text-green",
-  //   component: NewsList,
-  //   layout: "/admin"
-  // },
+     {
+    path: "/news_list",
+    name: "News List",
+    icon: "ni ni-planet text-green",
+    component: NewsList,
+    layout: "/admin"
+  },
   {
     path: "/create_user",
     name: "Create User",

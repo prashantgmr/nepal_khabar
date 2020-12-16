@@ -44,7 +44,8 @@ export default function AddNews() {
         newNews.append("district",data.district);
         newNews.append("newsTitle",data.title);
         newNews.append("newsContent",content);
-        newNews.append("imageFile",data.imageFile[0])
+        newNews.append("imageFile",data.imageFile[0]);
+        newNews.append("status","");
         console.log(newNews)
         addedNews(newNews);
     }

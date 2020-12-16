@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // @route   GET /api/v1/news
 exports.getNews = async (req, res, next) => {
   try {
-    const news = await News.find();
+    const news = await News.find().sort( { _id : -1 } );
     
     return res.status(200).json({
       success: true,
@@ -31,7 +31,8 @@ exports.addNews =  async (req, res, next) => {
       district: req.body.district,
       newsTitle: req.body.newsTitle,
       newsContent : req.body.newsContent,
-      imageFile: req.file.path
+      imageFile: req.file.path,
+      status:req.body.status
     });
     await news.save();
     // const news = await News.create(req.body);
@@ -72,6 +73,48 @@ exports.addNews =  async (req, res, next) => {
   }
 }
 
+exports.updateStatus =  async (req, res, next) => {
+  try {
+    // const { district, newsTitle, newsContent} = req.body;
+    const id = req.body.id;
+    const status = req.body.status;
+    await News.findByIdAndUpdate(id,{"status": status});
+
+    return res.status(201).json({
+      success: true,
+      data: {}
+    }); 
+  } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: 'Server Error'
+      });
+    
+  }
+}
+
+exports.updateNews = async (req,res,next)=>{
+  try {
+    const news = await News.findById(req.params.id);
+    if(!news) {
+      return res.status(404).json({
+        success: false,
+        error: 'No News found'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: news
+    });
+  }
+  catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    });
+  }
+}
 // @route   DELETE /api/v1/news/:id
 exports.deleteNews = async (req, res, next) => {
   try {

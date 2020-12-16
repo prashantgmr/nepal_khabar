@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { getNews, addNews, deleteNews } = require('../controller/newsController');
+const { getNews, addNews, deleteNews ,updateNews ,updateStatus } = require('../controller/newsController');
 
 
 const Storage = multer.diskStorage({
@@ -37,6 +37,12 @@ router
   .route('/')
   .get(getNews)
   .post(upload.single("imageFile"), addNews);
+router
+  .route('/edit/:id')
+  .post(updateNews);
+router
+  .route('/change_status')
+  .post(updateStatus)
   router
   .get('/?district=:idx')
 router

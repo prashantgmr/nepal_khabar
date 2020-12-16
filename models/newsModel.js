@@ -18,6 +18,9 @@ const NewsSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please upload an image']
   },
+  status: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now
