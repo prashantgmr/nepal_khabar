@@ -32,6 +32,23 @@ export const GlobalProvider = ({ children }) => {
           setUser(data);
         }
     }
+    async function getAllNews() {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/v1/news`)
+  
+        dispatch({
+          type: 'GET_NEWS',
+          payload: res.data.data
+        });
+      } catch (err) {
+        dispatch({
+          type: 'NEWS_ERROR',
+          payload: err.response.data.error
+        });
+      }
+  
+    }
+
   async function addedNews(newNews) {
         const config = {
             headers: {
@@ -58,6 +75,31 @@ export const GlobalProvider = ({ children }) => {
         }
     }
     
+    async function updateNews(updatedData, id) {
+      const config = {
+          headers: {
+          'Content-Type': 'application/json'
+          }
+      }
+
+      try {
+          const res = await axios.put(`http://localhost:5000/api/v1/news/update/${id}`,updatedData , config);
+          // res = await response.data.data;
+          console.log(res);
+          dispatch({
+              type: 'UPDATE_NEWS',
+              payload: {update : res.data.data, id:id }
+            });
+            enqueueSnackbar('News Updated successfully', {variant : 'success'})
+      } 
+      catch (err) {
+          dispatch({
+              type: 'NEWS_ERROR',
+              payload: err.response.data.error
+            });
+            // enqueueSnackbar(err.response.data.error, {variant : 'error'})
+      }
+  }
    async function addedUser(user) {
         const config = {
             headers: {
@@ -84,16 +126,35 @@ export const GlobalProvider = ({ children }) => {
         }
     }
 
+    async function deleteNews(id) {
+      try {
+        await axios.delete(`/api/v1/news/${id}`);
+  
+        dispatch({
+          type: 'DELETE_NEWS',
+          payload: id
+        });
+      } catch (err) {
+        dispatch({
+          type: 'NEWS_ERROR',
+          payload: err.response.data.error
+        });
+      }
+    }
 
   return (
     <GlobalContext.Provider
       value={{
-       news:state.news,
+        news:state.news,
         user:state.user,
         error:state.error,
+        dispatch,
         user,
+        getAllNews,
         addedNews,
+        updateNews,
         addedUser,
+        deleteNews,
         getCurrentUser
       }}
     >

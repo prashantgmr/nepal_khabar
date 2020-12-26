@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { getNews, addNews, deleteNews ,updateNews ,updateStatus } = require('../controller/newsController');
+const { getNews, addNews, deleteNews ,updateNews ,updateStatus, getOneNews} = require('../controller/newsController');
 
 
 const Storage = multer.diskStorage({
@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: Storage,
   limits: {
-    fileSize: 1024 * 1024 * 5
+    fileSize: 1024 * 1024 * 20
   },
   fileFilter: fileFilter
 });
@@ -38,15 +38,17 @@ router
   .get(getNews)
   .post(upload.single("imageFile"), addNews);
 router
-  .route('/edit/:id')
-  .post(updateNews);
+  .route('/update/:id')
+  .put(upload.single("imageFile"), updateNews);
 router
   .route('/change_status')
   .post(updateStatus)
-  router
-  .get('/?district=:idx')
+router
+  // .route('/?status=approved')
+  // .get(getApproved)
 router
   .route('/:id')
+  .get(getOneNews)
   .delete(deleteNews);
 
 module.exports = router;

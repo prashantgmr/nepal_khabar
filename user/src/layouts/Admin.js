@@ -25,6 +25,7 @@ import AdminFooter from "../components/Footers/AdminFooter.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
 
 import routes from "../routes.js";
+import AddNews from "../views/examples/AddNews.js";
 
 
 class Admin extends React.Component {
@@ -80,6 +81,7 @@ class Admin extends React.Component {
           />
           <Switch>
             {this.getRoutes(routes)}
+            <Route exact path="/admin/edit/:id" component ={AddNews}/>
             {/* <Redirect from="*" to="/admin/index" /> */}
           </Switch>
           <Container fluid>

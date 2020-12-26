@@ -14,7 +14,7 @@ export default function NepalMap() {
         async function fetchMyAPI() {
             let response = await axios.get(`http://localhost:5000/api/v1/news`)
             response = await response.data.data;
-            const newsData = response.filter(x=>x.district == selectDistrict)
+            const newsData = response.filter(x=>x.district == selectDistrict && x.status =='approved')
             setNews(newsData);
         };
         if(selectDistrict){

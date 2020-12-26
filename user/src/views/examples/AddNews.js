@@ -1,4 +1,6 @@
-import React, { useState, useContext} from 'react'
+import React, { useState, useContext, useEffect} from 'react'
+import {useParams} from 'react-router-dom'
+import {  useSnackbar } from 'notistack'
 import {
     Button,
     Card,
@@ -20,11 +22,16 @@ import { GlobalContext } from '../../context/GlobalContext.js';
 import Editor from 'material-ui-editor'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from 'axios'
 
 
 export default function AddNews() {
+    const {id} = useParams();
+    const [editMode,setEditMode]= useState(false)
+    const [editNews, setEditNews]=useState()
     const { register, handleSubmit, errors } = useForm();
-    const { addedNews ,error} = useContext(GlobalContext)
+    const { addedNews ,error, dispatch , updateNews} = useContext(GlobalContext);
+    const { enqueueSnackbar } = useSnackbar();
      const [content, setContent] = useState("");
     var i = 1 ;
     Object.keys(mapData.features).map(
@@ -32,6 +39,22 @@ export default function AddNews() {
         mapData.features[e]["idx"] = `${i}`;
         i++
     });
+
+    useEffect(()=>{
+        if(id){
+            setEditMode(true);
+            fetchEditNews();
+        }
+
+    }, [id]);
+
+    async function fetchEditNews() {
+        let response = await axios.get(`http://localhost:5000/api/v1/news/${id}`)
+        response = await response.data.data;
+        console.log(response, "edit")
+        setEditNews(response.news);
+
+    };
     const district = mapData.features.map(x=>x);
     const onSubmit=(data) =>{
         // const newNews = {
@@ -40,6 +63,7 @@ export default function AddNews() {
         //     newsContent : data.content,
         //     imageFile : data.imageFile[0]
         // }
+        if(!id){
         let newNews = new FormData();
         newNews.append("district",data.district);
         newNews.append("newsTitle",data.title);
@@ -47,9 +71,19 @@ export default function AddNews() {
         newNews.append("imageFile",data.imageFile[0]);
         newNews.append("status","");
         console.log(newNews)
-        addedNews(newNews);
+        addedNews(newNews)
+            
+        } else {
+        let updatedData = new FormData();
+        updatedData.append("district",data.district);
+        updatedData.append("newsTitle",data.title);
+        updatedData.append("newsContent",content);
+        updatedData.append("imageFile",data.imageFile[0]);
+        updatedData.append("status",editNews.status);
+            
+            updateNews(updatedData , id);
+        }
     }
-
 
    
     return (
@@ -62,7 +96,7 @@ export default function AddNews() {
                             <CardHeader className="bg-white border-0">
                                 <Row className="align-items-center">
                                     <Col xs="8">
-                                        <h3 className="mb-0">Add News</h3>
+                                        <h3 className="mb-0">{!id ? 'Add News' : 'Edit News'}</h3>
                                     </Col>
                                 </Row>
                             </CardHeader>
@@ -81,14 +115,16 @@ export default function AddNews() {
                                         
                                         <select
                                             className="form-control-alternative form-control"
-                                            // defaultValue="lucky.jesse"
                                             id="input-district"
                                             name="district"
                                             // placeholder={error != null && error.ProjectTitle ? error.ProjectTitle : 'Enter project Title'}
                                             type="select"
                                             ref={register}
                                         >
-                                        {district.map(x=><option key={x.idx} value={x.idx}>{x.properties.जिल्ला}</option>)}
+                                        {district.map(x=>{
+                                        return (
+                                        <option key={x.idx} value={x.idx} selected={ editNews && editNews.district}>{x.properties.जिल्ला}</option>
+                                        )})}
                                         </select>
                    
                                     </FormGroup>
@@ -102,6 +138,7 @@ export default function AddNews() {
                                         
                                         <input
                                             className="form-control-alternative form-control"
+                                            defaultValue={editNews && editNews.newsTitle}
                                             id="input-title"
                                             placeholder={error != null && error.newsTitle ? error.newsTitle : ' Enter News Title '}
                                             type="text"
@@ -132,7 +169,7 @@ export default function AddNews() {
                                                   onChange={(event)=>{}}/> */}
                                         <CKEditor
                                             editor={ ClassicEditor }
-                                            data="Enter your content here</p>"
+                                            data={editNews && editNews.newsContent}
                                             onReady={ editor => {
                                                 // You can store the "editor" and use when it is needed.
                                                 console.log( 'Editor is ready to use!', editor );
@@ -159,7 +196,9 @@ export default function AddNews() {
                                             Choose featured image
                                         </label>
                                         {/* <div className="custom-file"> */}
-                                            <input className="form-control-alternative form-control"  id="customFileLang"  type="file" ref={register} name="imageFile"/>
+                                        <input className="form-control-alternative form-control" 
+                                        // value={editNews && editNews.imageFile} 
+                                        id="customFileLang"  type="file" ref={register} name="imageFile"/>
                                             {/* <label className="custom-file-label" htmlFor="customFileLang">Select file</label> */}
                                         {/* </div> */}
                                         {error != null && error.image ? <span className="text-danger">{error.image}</span> : null }
@@ -168,7 +207,7 @@ export default function AddNews() {
                                     Project Address
                                     </h6> */}
                         
-                                    <Button size="md" color="primary" type="submit">ADD</Button>
+                                    <Button size="md" color="primary" type="submit">{!id ? 'ADD' : 'UPDATE'}</Button>
 
                                 </form>
                             </CardBody>
